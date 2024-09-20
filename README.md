@@ -1,7 +1,14 @@
-# Fantasy-Cricket
+# Fantasy Cricket Web Application  
+# [Live Project](https://fantasycricketbydharmik.netlify.app)
 
-# Developed an interactive fantasy cricket web application using HTML, CSS, and JavaScript, simulating team selection and match gameplay.
-# Implemented complex game logic including toss functionality, player role assignment, and realistic match simulation with dynamic scoring.
-# Designed a user-friendly interface featuring real-time credit management, captain selection, and fantasy point calculation based on player performance.
-# Utilized object-oriented programming and DOM manipulation for efficient game state management and seamless user experience.
-You can assume to be DREAM11 Functionality Clone
+An interactive fantasy cricket game built using **HTML, CSS, and JavaScript**, simulating team selection and match gameplay with features like:
+
+- Toss functionality
+- Player role assignment (captain, vice-captain)
+- Realistic match simulation with dynamic scoring
+- Real-time credit management
+- Fantasy point calculation based on player performance
+- User-friendly interface with real-time updates
+- Object-oriented design for efficient game state management
+
+A Dream11 functionality clone with scalable, responsive design for future enhancements.
