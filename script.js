@@ -45,9 +45,9 @@ class Team {
   static TOTAL_CREDIT = 100;
   constructor() {
   }
-  addTeam(name, isTossWon, win,totFantPoint, totScore, credit, players) {
+  addTeam(name, isTossWon, win, totFantPoint, totScore, credit, players) {
     this.name = name;
-    this.isTossWontoss = isTossWon;
+    this.isTossWon = isTossWon;
     this.win = win;
     this.totFantPoint = totFantPoint;
     this.totScore = totScore;
@@ -112,11 +112,9 @@ function functionToss() {
 }
 
 // Populate available players
-// Make sure these are properly selected
 const availablePlayers = document.getElementById("available-players");
 const firstTeamPlayers = document.getElementById("firstTeamPlayers");
 const secondTeamPlayers = document.getElementById("secondTeamPlayers");
-
 
 data.forEach((player) => {
   const li = document.createElement("li");
@@ -128,322 +126,188 @@ data.forEach((player) => {
 
   document.getElementById("firstTeamSelectionArea").classList.remove("disabled");
   document.getElementById("secondTeamSelectionArea").classList.add("disabled");
- 
 });
 
-// First Team Selection Logic
+// Combined Team Selection Logic
+
+
 function selectPlayer(event) {
-  const player = event.target;
-  const playerName = player.dataset.name;
-  const playerRole = player.dataset.role;
-  const playerCredit = parseFloat(player.dataset.credit);
-  const TOTAL_PLAYERS = Players.TOTAL_BATSMAN + Players.TOTAL_BOWLER + Players.TOTAL_KEEPER;
+  if(event.target.closest("li")){
+    const player = event.target;
+    const playerName = player.dataset.name;
+    const playerRole = player.dataset.role;
+    const playerCredit = parseFloat(player.dataset.credit);
+    const TOTAL_PLAYERS = Players.TOTAL_BATSMAN + Players.TOTAL_BOWLER + Players.TOTAL_KEEPER;
 
-  if (TOTAL_PLAYERS == 11) {
-    alert(`You can only choose 11 players!!`);
-    return;
+    if (TOTAL_PLAYERS == 11) {
+      alert(`You can only choose 11 players!!`);
+      return;
+    }
+
+    if (Team.TOTAL_CREDIT < playerCredit) {
+      alert(`Your credit score ${Team.TOTAL_CREDIT} is not enough to buy ${playerName} with credit ${playerCredit}`);
+      return;
+    }
+
+    if (playerRole === "Batsman" && Players.TOTAL_BATSMAN === 5) {
+      alert(`5 Batsmen are enough, please choose Bowlers or one Wicketkeeper`);
+      return;
+    }
+
+    if (playerRole === "Bowler" && Players.TOTAL_BOWLER === 5) {
+      alert(`5 Bowlers are enough, please choose Batsmen or one Wicketkeeper`);
+      return;
+    }
+
+    if (playerRole === "Wicketkeeper" && Players.TOTAL_KEEPER === 1) {
+      alert(`You can only choose one Wicketkeeper`);
+      return;
+    }
+
+    const currentPlayers = currentTeamIndex === 0 ? players : team2Players;
+    currentPlayers.addPlayers(playerName, playerRole, playerCredit, false, false, 0, 0, false, 0, "", 0);
+    const currentTeam = currentTeamIndex === 0 ? team1 : team2;
+    currentTeam.addTeam(currentTeamIndex === 0 ? tossWinnerName : tossLoserName, currentTeamIndex === 0, false, 0, 0, playerCredit, currentPlayers);
+
+    availablePlayers.removeChild(player);
+    (currentTeamIndex === 0 ? firstTeamPlayers : secondTeamPlayers).appendChild(player);
+    player.classList.add("selected");
+
+    const captainDropdown = document.querySelector(`#${currentTeamIndex === 0 ? 'first' : 'second'}TeamPlayersCapOptions`).parentElement;
+    const option = document.createElement("option");
+    option.value = playerName;
+    option.text = playerName;
+    captainDropdown.appendChild(option);
+
+    const viceCaptainDropdown = document.querySelector(`#${currentTeamIndex === 0 ? 'first' : 'second'}TeamViceCaptainOptions`).parentElement;
+    const viceOption = document.createElement("option");
+    viceOption.value = playerName;
+    viceOption.text = playerName;
+    viceCaptainDropdown.appendChild(viceOption);
+
+    if (playerRole === "Batsman") {
+      Players.TOTAL_BATSMAN++;
+    } else if (playerRole === "Bowler") {
+      Players.TOTAL_BOWLER++;
+    } else if (playerRole === "Wicketkeeper") {
+      Players.TOTAL_KEEPER++;
+    }
+
+    document.getElementById(`${currentTeamIndex === 0 ? 'first' : 'second'}TeamCredits`).innerText = `Credits Left: ${Team.TOTAL_CREDIT} \nTotal Batsman: ${Players.TOTAL_BATSMAN} \n Total Bowlers: ${Players.TOTAL_BOWLER} \n Total Keepers: ${Players.TOTAL_KEEPER}`
   }
-
-  if (Team.TOTAL_CREDIT < playerCredit) {
-    alert(`Your credit score ${Team.TOTAL_CREDIT} is not enough to buy ${playerName} with credit ${playerCredit}`);
-    return;
-  }
-
-  if (playerRole === "Batsman" && Players.TOTAL_BATSMAN === 5) {
-    alert(`5 Batsmen are enough, please choose Bowlers or one Wicketkeeper`);
-    return;
-  }
-
-  if (playerRole === "Bowler" && Players.TOTAL_BOWLER === 5) {
-    alert(`5 Bowlers are enough, please choose Batsmen or one Wicketkeeper`);
-    return;
-  }
-
-  if (playerRole === "Wicketkeeper" && Players.TOTAL_KEEPER === 1) {
-    alert(`You can only choose one Wicketkeeper`);
-    return;
-  }
-
-  players.addPlayers(playerName, playerRole, playerCredit, false, false, 0, 0, false, 0, "", 0);
-  team1.addTeam(tossWinnerName, true, false, 0, 0, playerCredit, players);
-  
-  
-
-  availablePlayers.removeChild(player);
-  firstTeamPlayers.appendChild(player);
-  player.classList.add("selected");
-
-  const captainDropdown = document.querySelector("#firstTeamPlayersCapOptions").parentElement;
-  const option = document.createElement("option");
-  option.value = playerName;
-  option.text = playerName;
-  captainDropdown.appendChild(option);
-
-  const viceCaptainDropdown = document.querySelector("#firstTeamViceCaptainOptions").parentElement;
-  const viceOption = document.createElement("option");
-  viceOption.value = playerName;
-  viceOption.text = playerName;
-  viceCaptainDropdown.appendChild(viceOption);
-
-  if (playerRole === "Batsman") {
-    Players.TOTAL_BATSMAN++;
-  } else if (playerRole === "Bowler") {
-    Players.TOTAL_BOWLER++;
-  } else if (playerRole === "Wicketkeeper") {
-    Players.TOTAL_KEEPER++;
-  }
-
-  document.getElementById("firstTeamCredits").innerText = `Credits Left: ${Team.TOTAL_CREDIT} \nTotal Batsman: ${Players.TOTAL_BATSMAN} \n Total Bowlers: ${Players.TOTAL_BOWLER} \n Total Keepers: ${Players.TOTAL_KEEPER}`
 }
 
 function deselectPlayer(event) {
-  const player = event.target;
-  const playerName = player.dataset.name;
-  const playerRole = player.dataset.role;
-  const playerCredit = parseFloat(player.dataset.credit);
+  if(event.target.closest("li")){
+    const player = event.target;
+    const playerName = player.dataset.name;
+    const playerRole = player.dataset.role;
+    const playerCredit = parseFloat(player.dataset.credit);
 
-  firstTeamPlayers.removeChild(player);
-  availablePlayers.appendChild(player);
-  player.classList.remove("selected");
+    (currentTeamIndex === 0 ? firstTeamPlayers : secondTeamPlayers).removeChild(player);
+    availablePlayers.appendChild(player);
+    player.classList.remove("selected");
 
-  const captainDropdown = document.querySelector("#firstTeamPlayersCapOptions").parentElement;
-  const options = captainDropdown.querySelectorAll("option");
-  options.forEach(option => {
-    if (option.value === playerName) {
-      captainDropdown.removeChild(option);
+    const captainDropdown = document.querySelector(`#${currentTeamIndex === 0 ? 'first' : 'second'}TeamPlayersCapOptions`).parentElement;
+    const options = captainDropdown.querySelectorAll("option");
+    options.forEach(option => {
+      if (option.value === playerName) {
+        captainDropdown.removeChild(option);
+      }
+    });
+    
+    const viceCaptainDropdown = document.querySelector(`#${currentTeamIndex === 0 ? 'first' : 'second'}TeamViceCaptainOptions`).parentElement;
+    const viceOptions = viceCaptainDropdown.querySelectorAll("option");
+    viceOptions.forEach(option => {
+      if (option.value === playerName) {
+        viceCaptainDropdown.removeChild(option);
+      }
+    });
+    
+    const currentPlayers = currentTeamIndex === 0 ? players : team2Players;
+    currentPlayers.removePlayers(playerName);
+    Team.TOTAL_CREDIT += playerCredit;
+    
+    if (playerRole === "Batsman") {
+      Players.TOTAL_BATSMAN--;
+    } else if (playerRole === "Bowler") {
+      Players.TOTAL_BOWLER--;
+    } else if (playerRole === "Wicketkeeper") {
+      Players.TOTAL_KEEPER--;
     }
-  });
-  
-  const viceCaptainDropdown = document.querySelector("#firstTeamViceCaptainOptions").parentElement;
-  const viceOptions = viceCaptainDropdown.querySelectorAll("option");
-  viceOptions.forEach(option => {
-    if (option.value === playerName) {
-      viceCaptainDropdown.removeChild(option);
-    }
-  });
-  
-  players.removePlayers(playerName);
-  Team.TOTAL_CREDIT += playerCredit;
-  
-  if (playerRole === "Batsman") {
-    Players.TOTAL_BATSMAN--;
-  } else if (playerRole === "Bowler") {
-    Players.TOTAL_BOWLER--;
-  } else if (playerRole === "Wicketkeeper") {
-    Players.TOTAL_KEEPER--;
+    document.getElementById(`${currentTeamIndex === 0 ? 'first' : 'second'}TeamCredits`).innerText = `Credits Left: ${Team.TOTAL_CREDIT} \nTotal Batsman: ${Players.TOTAL_BATSMAN} \n Total Bowlers: ${Players.TOTAL_BOWLER} \n Total Keepers: ${Players.TOTAL_KEEPER}`
   }
-  document.getElementById("firstTeamCredits").innerText = `Credits Left: ${Team.TOTAL_CREDIT} \nTotal Batsman: ${Players.TOTAL_BATSMAN} \n Total Bowlers: ${Players.TOTAL_BOWLER} \n Total Keepers: ${Players.TOTAL_KEEPER}`
 }
 
-// Event listeners for first team selection
-availablePlayers.addEventListener("click", selectPlayer);
-firstTeamPlayers.addEventListener("click", deselectPlayer);
+// single function to create both teams
+let currentTeamIndex = 0;
+function createTeam() {
+  const teamData = [
+    { name: tossWinnerName, players: players, team: team1 },
+    { name: tossLoserName, players: team2Players, team: team2 }
+  ];
 
-function createFirstTeam() {
-  const captainName = document.getElementById("firstTeamPlayersCapSelect").value;
-  const viceCaptainName = document.getElementById("firstTeamPlayersViceCapSelect").value;
+  const currentTeam = teamData[currentTeamIndex];
+  const captainName = document.getElementById(`${currentTeamIndex === 0 ? 'first' : 'second'}TeamPlayersCapSelect`).value;
+  const viceCaptainName = document.getElementById(`${currentTeamIndex === 0 ? 'first' : 'second'}TeamPlayersViceCapSelect`).value;
   const TOTAL_PLAYERS = Players.TOTAL_BATSMAN + Players.TOTAL_BOWLER + Players.TOTAL_KEEPER;
 
-  if(captainName === viceCaptainName) {
+  if (captainName === viceCaptainName) {
     alert(`Captain and Vice captain should not be same!!`);
     return;
   }
-  if(TOTAL_PLAYERS != 11) {
+  if (TOTAL_PLAYERS != 11) {
     alert("Please first choose 11 players!");
     return;
   }
 
-  players.setCaptain(captainName);
-  players.setViceCaptain(viceCaptainName);
-  teams.addTeams(team1);
-  console.log(teams)
-  
-  alert(`Congratulations ${tossWinnerName}, your team is created!!`);
-  alert(`Now ${tossLoserName}, select your team!`);
-  
-  isFirstTeamCreated = true;
+  currentTeam.players.setCaptain(captainName);
+  currentTeam.players.setViceCaptain(viceCaptainName);
+  teams.addTeams(currentTeam.team);
 
-  // let winnerTeam = teams.returnTossWinnerTeam();
-  // console.log(winnerTeam.players.players);
-  // winnerTeam.players.players.forEach((p)=>console.log(`${p.name} ${p.credit} ${p.isPlayed}`))
-  switchToSecondTeamSelection();
+  alert(`Congratulations ${currentTeam.name}, your team is created!!`);
+
+  if (currentTeamIndex === 0) {
+    isFirstTeamCreated = true;
+    currentTeamIndex++;
+    alert(`Now ${tossLoserName}, select your team!`);
+    switchToSecondTeamSelection();
+  } else {
+    console.log(teams);
+    tossWinnerTeam = teams.returnTossWinnerTeam();
+    tossLoserTeam = teams.returnTossLoserTeam();
+    showMatchSelection(tossWinnerTeam, tossLoserTeam);
+  }
 }
 
-// Second Team Selection Logic
-function initializeSecondTeam() {
-  team2Players = new Players();
-  team2 = new Team();
-  Team.TOTAL_CREDIT = 100;
-  Players.TOTAL_BATSMAN = 0;
-  Players.TOTAL_BOWLER = 0;
-  Players.TOTAL_KEEPER = 0;
-
-  // Remove event listeners from first team selection
-  availablePlayers.removeEventListener("click", selectPlayer);
-  firstTeamPlayers.removeEventListener("click", deselectPlayer);
-
-  // Add event listeners for second team selection
-  availablePlayers.addEventListener("click", selectSecondTeamPlayer);
-  document.getElementById("secondTeamPlayers").addEventListener("click", deselectSecondTeamPlayer);
-
-  console.log("Second team initialized");
-}
+// this function call after first team is successfully created
 
 function switchToSecondTeamSelection() {
   document.getElementById("firstTeamSelectionArea").classList.add("disabled");
   document.getElementById("secondTeamSelectionArea").classList.remove("disabled");
 
-  
-  // Reset available players
-  // while (availablePlayers.firstChild) {
-  //   availablePlayers.removeChild(availablePlayers.firstChild);
-  // }
-  
-  // Repopulate available players
-  // data.forEach((player) => {
-  //   const li = document.createElement("li");
-  //   li.textContent = `${player.name} [${player.playingRole}, Credit: ${player.credit}]`;
-  //   li.dataset.name = player.name;
-  //   li.dataset.role = player.playingRole;
-  //   li.dataset.credit = player.credit;
-  //   availablePlayers.appendChild(li);
-  // });
+  // Reset counteres for second team
+  Players.TOTAL_BATSMAN = 0;
+  Players.TOTAL_BOWLER = 0;
+  Players.TOTAL_KEEPER = 0;
+  Team.TOTAL_CREDIT = 100;
 
-  initializeSecondTeam();
+  // Update event listeners
+  availablePlayers.removeEventListener("click", selectPlayer);
+  firstTeamPlayers.removeEventListener("click", deselectPlayer);
+  availablePlayers.addEventListener("click", selectPlayer);
+  secondTeamPlayers.addEventListener("click", deselectPlayer);
 }
 
-function selectSecondTeamPlayer(event) {
-  const player = event.target;
-  const playerName = player.dataset.name;
-  const playerRole = player.dataset.role;
-  const playerCredit = parseFloat(player.dataset.credit);
-  const TOTAL_PLAYERS = Players.TOTAL_BATSMAN + Players.TOTAL_BOWLER + Players.TOTAL_KEEPER;
-
-  if (TOTAL_PLAYERS == 11) {
-    alert(`You can only choose 11 players!!`);
-    return;
-  }
-
-  if (Team.TOTAL_CREDIT < playerCredit) {
-    alert(`Your credit score ${Team.TOTAL_CREDIT} is not enough to buy ${playerName} with credit ${playerCredit}`);
-    return;
-  }
-
-  if (playerRole === "Batsman" && Players.TOTAL_BATSMAN === 5) {
-    alert(`5 Batsmen are enough, please choose Bowlers or one Wicketkeeper`);
-    return;
-  }
-
-  if (playerRole === "Bowler" && Players.TOTAL_BOWLER === 5) {
-    alert(`5 Bowlers are enough, please choose Batsmen or one Wicketkeeper`);
-    return;
-  }
-
-  if (playerRole === "Wicketkeeper" && Players.TOTAL_KEEPER === 1) {
-    alert(`You can only choose one Wicketkeeper`);
-    return;
-  }
-
-  team2Players.addPlayers(playerName, playerRole, playerCredit, false, false, 0, 0, false, 0, "", 0);
-  team2.addTeam(tossLoserName, false, false, 0, 0, playerCredit, team2Players);
-
-  availablePlayers.removeChild(player);
-  document.getElementById("secondTeamPlayers").appendChild(player);
-  player.classList.add("selected");
-
-  const captainDropdown = document.querySelector("#secondTeamPlayersCapOptions").parentElement;
-  const option = document.createElement("option");
-  option.value = playerName;
-  option.text = playerName;
-  captainDropdown.appendChild(option);
-
-  const viceCaptainDropdown = document.querySelector("#secondTeamViceCaptainOptions").parentElement;
-  const viceOption = document.createElement("option");
-  viceOption.value = playerName;
-  viceOption.text = playerName;
-  viceCaptainDropdown.appendChild(viceOption);
-
-  if (playerRole === "Batsman") {
-    Players.TOTAL_BATSMAN++;
-  } else if (playerRole === "Bowler") {
-    Players.TOTAL_BOWLER++;
-  } else if (playerRole === "Wicketkeeper") {
-    Players.TOTAL_KEEPER++;
-  }
- document.getElementById("secondTeamCredits").innerText = `Credits Left: ${Team.TOTAL_CREDIT} \nTotal Batsman: ${Players.TOTAL_BATSMAN} \n Total Bowlers: ${Players.TOTAL_BOWLER} \n Total Keepers: ${Players.TOTAL_KEEPER}`
-}
-
-function deselectSecondTeamPlayer(event) {
-  const player = event.target;
-  const playerName = player.dataset.name;
-  const playerRole = player.dataset.role;
-  const playerCredit = parseFloat(player.dataset.credit);
-  
-  document.getElementById("secondTeamPlayers").removeChild(player);
-  availablePlayers.appendChild(player);
-  player.classList.remove("selected");
-  
-  const captainDropdown = document.querySelector("#secondTeamPlayersCapOptions").parentElement;
-  const options = captainDropdown.querySelectorAll("option");
-  options.forEach(option => {
-    if (option.value === playerName) {
-      captainDropdown.removeChild(option);
-    }
-  });
-  
-  const viceCaptainDropdown = document.querySelector("#secondTeamViceCaptainOptions").parentElement;
-  const viceOptions = viceCaptainDropdown.querySelectorAll("option");
-  viceOptions.forEach(option => {
-    if (option.value === playerName) {
-      viceCaptainDropdown.removeChild(option);
-    }
-  });
-  
-  team2Players.removePlayers(playerName);
-  Team.TOTAL_CREDIT += playerCredit;
-
-  if (playerRole === "Batsman") {
-    Players.TOTAL_BATSMAN--;
-  } else if (playerRole === "Bowler") {
-    Players.TOTAL_BOWLER--;
-  } else if (playerRole === "Wicketkeeper") {
-    Players.TOTAL_KEEPER--;
-  }
-  document.getElementById("secondTeamCredits").innerText = `Credits Left: ${Team.TOTAL_CREDIT} \nTotal Batsman: ${Players.TOTAL_BATSMAN} \n Total Bowlers: ${Players.TOTAL_BOWLER} \n Total Keepers: ${Players.TOTAL_KEEPER}`
-}
-
-function createSecondTeam() {
-  const captainName = document.getElementById("secondTeamPlayersCapSelect").value;
-  const viceCaptainName = document.getElementById("secondTeamPlayersViceCapSelect").value;
-  const TOTAL_PLAYERS = Players.TOTAL_BATSMAN + Players.TOTAL_BOWLER + Players.TOTAL_KEEPER;
-
-  if(captainName === viceCaptainName) {
-    alert(`Captain and Vice captain should not be same!!`);
-    return;
-  }
-  if(TOTAL_PLAYERS != 11) {
-    alert("Please first choose 11 players!");
-    return;
-  }
-
-  team2Players.setCaptain(captainName);
-  team2Players.setViceCaptain(viceCaptainName);
-  teams.addTeams(team2);
-  
-  alert(`Congratulations ${tossLoserName}, your team is created!!`);
-  console.log(teams);
-   tossWinnerTeam = teams.returnTossWinnerTeam();
-   tossLoserTeam = teams.returnTossLoserTeam();
-  showMatchSelection(tossWinnerTeam, tossLoserTeam);
-}
-
-// Initial setup
-document.getElementById("available-players").addEventListener("click", selectPlayer);
+// Event listeners for team selection
+availablePlayers.addEventListener("click", selectPlayer);
 firstTeamPlayers.addEventListener("click", deselectPlayer);
 
+
+
 window.functionToss = functionToss;
-window.createFirstTeam = createFirstTeam;
-window.createSecondTeam = createSecondTeam;
+window.createTeam = createTeam;
+
 
 
 //-------------------Display block and none area-------------------------
@@ -480,11 +344,11 @@ function showMatchSelection(tossWinnerTeam, tossLoserTeam){
 
 
 
-  let marqueeTextId =  document.getElementById('marqueeText');
+  let marqueeTextId =  document.getElementById("marqueeText");
   marqueeTextId.innerHTML = `${tossWinnerName} Won the toss and choose to BAT first!`;
   setTimeout(() => {
       marqueeTextId.innerHTML = "";
-  }, 14000);
+  }, 20000);
   // showing first team players
   document.getElementById("tossWinnerTeamName").textContent = `${tossWinnerName}'s Team`;
   tossWinnerTeam.players.players.forEach((player) => {
@@ -495,10 +359,12 @@ function showMatchSelection(tossWinnerTeam, tossLoserTeam){
   li.dataset.credit = player.credit;
   matchTossWinnerTeamPlayers.appendChild(li);
   if(player.captain){
+    li.textContent = `${player.name} [${player.role}, Credit: ${player.credit}] [C]`;
     li.classList.add("captain")
   }
   else if(player.viceCaptain){
     li.classList.add("vice-captain")
+    li.textContent = `${player.name} [${player.role}, Credit: ${player.credit}] [VC]`;
   }
 });
 
@@ -513,9 +379,11 @@ tossLoserTeam.players.players.forEach((player) => {
   matchTossLoserTeamPlayers.appendChild(li);
   if(player.captain){
     li.classList.add("captain")
+    li.textContent = `${player.name} [${player.role}, Credit: ${player.credit}] [C]`;
   }
   else if(player.viceCaptain){
     li.classList.add("vice-captain")
+    li.textContent = `${player.name} [${player.role}, Credit: ${player.credit}] [VC]`;
   }
 });
   // console.log(tossLoserTeam)
@@ -541,10 +409,13 @@ function randomNumberGenerator() {
 return Math.floor(Math.random() * 7);
 }
 
-let count = 0;
+let wicketCounts = 0;
 let totOverBalls = 0;
+let totBalls = 30;
 let firstTeamFantPoints  = document.getElementById("firstTeamFantPoints");
 let secondTeamFantPoints  = document.getElementById("secondTeamFantPoints");
+let hitButton = document.getElementById("hit");
+let loadingGif = document.getElementById("loading");
 let finalMatchResultId = document.getElementById("finalMatchResult");
 let isFirstInningCompleted = false;
 let over = 0;
@@ -553,11 +424,31 @@ let currPlayingTeam;
 let currBowlingTeam;
 
 
+hitButton.addEventListener('click', () =>{
+    hitButton.classList.add("disabled");
+    loadingGif.style.display = "block";
+    
+    setTimeout(() => {
+        hitButton.classList.remove("disabled");
+        loadingGif.style.display = "none";
+    }, 5000);
+  })
+
+
 function hitFunction(){
      currPlayingTeam =  isFirstInningCompleted ? tossLoserTeam : tossWinnerTeam;
      currBowlingTeam = isFirstInningCompleted ? tossWinnerTeam : tossLoserTeam;
-  if(count < 11 && totOverBalls < 30){
-    const player = currPlayingTeam.players.players.find((p) => !p.isPlayed);
+   if(wicketCounts < 11 && totOverBalls < totBalls){
+    const player = currPlayingTeam.players.players.find((p) => {
+      if (wicketCounts < 5 && !p.isPlayed && p.role === "Batsman") {
+          return true;
+      } else if (wicketCounts >= 5 && wicketCounts < 10 && !p.isPlayed && p.role === "Bowler") {
+          return true;
+      } else if (wicketCounts === 10 && !p.isPlayed && p.role === "Wicketkeeper") {
+          return true;
+      }
+      return false;
+  });
     const bowler = currBowlingTeam.players.players.find((p) => (p.role === "Bowler" && !p.isPlayed));
 
     if (player === undefined || bowler === undefined) alert("First Innigs is completed");
@@ -610,8 +501,8 @@ function hitFunction(){
         }
         player.isPlayed = true; 
         player.outBy = bowler.name;
-        // alert(`${player.name} is OUT! by ${bowler.name}`);
-        count++;
+        alert(`${player.name} is OUT! by ${bowler.name}`);
+        wicketCounts++;
     }
     else{
         player.fantPoint += playerPoints;
@@ -622,7 +513,7 @@ function hitFunction(){
         console.log(`${player.fantPoint} kohli`)
         
         // for last played player markingg true
-        if(count == 10 || totOverBalls == 29){
+        if(wicketCounts == 10 || totOverBalls == 29){
             player.isPlayed = 'notOut';
         }
     }
@@ -644,16 +535,16 @@ function hitFunction(){
     updateFantasyPointsDisplay();
 }
 
-    if(totOverBalls == 30){
+    if(totOverBalls == totBalls){
         const title = isFirstInningCompleted ? "Second" : "First";
         isFirstInningCompleted = true;
-        count = 0;
+        wicketCounts = 0;
         totOverBalls = 0;
         totComptInnings++;
 
         // alert("First inning is completed!");
         const playingDetails = document.getElementById("playingDetails");
-        alert(`${title} inning is over! now ${currPlayingTeam.name} is Bowl and ${currBowlingTeam.name} is Bat`)
+      
         const firstInningTitle = `--------------------------${title} Inning Summary----------------------------------`;
         playingDetails.textContent = "";
         playingDetails.textContent += firstInningTitle + "\n";
@@ -671,7 +562,7 @@ function hitFunction(){
             //     playingDetails.textContent += `Noutout`
             // }
         })
-        playingDetails.textContent += `Total Score : ${currPlayingTeam.totScore} \nTotal Wickets: ${count} \nRun Rate:${(currPlayingTeam.totScore / 5).toFixed(2)} \nTotal Fantasy Point:${currPlayingTeam.totFantPoint}\n`
+        playingDetails.textContent += `Total Score : ${currPlayingTeam.totScore} \nTotal Wickets: ${wicketCounts} \nRun Rate:${(currPlayingTeam.totScore / 5).toFixed(2)} \nTotal Fantasy Point:${currPlayingTeam.totFantPoint}\n`
         playingDetails.textContent +="--------------------------------------------------------------------------------"
         playingDetails.textContent += `${currBowlingTeam.name}'s Team Summary \n\n`
         // console.log(tossLoserTeam)
@@ -682,6 +573,12 @@ function hitFunction(){
         })
         playingDetails.textContent += `Total Fantasy Points : ${currBowlingTeam.totFantPoint}`
         finalMatchResultId.textContent += playingDetails.textContent;
+        if(totComptInnings < 2){
+          alert(`${title} inning is over! now ${currPlayingTeam.name} is Bowling and ${currBowlingTeam.name} is Batting`)
+        }
+        else{
+          alert(`Both Teams Played their Match, Now Click on Show Result!!`)
+        }
      
         currPlayingTeam.players.players.forEach((p) => p.isPlayed = false);
         currBowlingTeam.players.players.forEach((p) => p.isPlayed = false);
@@ -694,7 +591,7 @@ function hitFunction(){
         marqueeTextId.innerHTML = `Now ${tossLoserName} is Batting and ${tossWinnerName} team is bowling!`;
         setTimeout(() => {
             marqueeTextId.innerHTML = "";
-        }, 14000);
+        }, 20000);
         if(totComptInnings == 2){
             document.getElementById("hit").style.display = "none";
             document.getElementById("showMatchResult").style.display = "block";
@@ -716,7 +613,7 @@ function updateFantasyPointsDisplay() {
     const battingTeamPoints = document.getElementById(isFirstInningCompleted ? "secondTeamFantPoints" : "firstTeamFantPoints");
     const bowlingTeamPoints = document.getElementById(isFirstInningCompleted ? "firstTeamFantPoints" : "secondTeamFantPoints");
     
-    battingTeamPoints.innerHTML = `Fantasy Points: ${currPlayingTeam.totFantPoint} <br> Score : ${currPlayingTeam.totScore}/${count} <br> Run Rate : ${(currPlayingTeam.totScore / 6).toFixed(2)} `;
+    battingTeamPoints.innerHTML = `Fantasy Points: ${currPlayingTeam.totFantPoint} <br> Score : ${currPlayingTeam.totScore}/${wicketCounts} <br> Run Rate : ${(currPlayingTeam.totScore / 6).toFixed(2)} `;
     bowlingTeamPoints.innerHTML = `Fantasy Points: ${currBowlingTeam.totFantPoint} <br> Overs : ${over}`;
   }
 
