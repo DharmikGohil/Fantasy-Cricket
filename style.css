@@ -1,201 +1,203 @@
-General Styles
+
 body {
-  font-family: Arial, sans-serif;
-}
-
-input[type="text"] {
-  margin-bottom: 10px;
-  padding: 5px;
-}
-
-input[type="button"] {
-  margin-top: 10px;
-  padding: 5px 10px;
-}
-
-/* Flex Container for Player Lists */
-.available-container {
-  /* display: flex;
-  justify-content: space-between; */
-  margin-left: 500px;
-  cursor: pointer;
-  border-radius: 6px;
-  /* height: 40px;
-  width: 70px; */
-  /* background-color: rgb(0, 0, 0);
-  color: rgb(255, 255, 255); */
-  /* box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.573);
-  border: 1px solid #cfbebe ; */
-}
-
-.available-container > div {
-  width: 45%; /* Adjust width as needed */
-}
-
-.player-container{
-  display:flex;
-  margin-top: 20px;
-  margin-right: 15px;
-  justify-content: space-evenly;
-  text-align: center;
-}
-.CVCdiv{
-  display: flex;
-  justify-content: space-around;
-  margin-top: 30px;
-}
-/* Player Section Styles */
-.player-section {
-  margin-bottom: 20px;
-}
-
-.player-section h4 {
-  margin-bottom: 10px;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-li {
-  padding: 10px;
-  cursor: pointer;
-  background-color: #f1f1f1;
-  margin-bottom: 5px;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
-
-li:hover {
-  background-color: #ddd;
-}
-
-.selected {
-  background-color: #b3e6b3;
-}
-
-
-/* Textarea Styles */
-textarea {
-  margin-bottom: 10px;
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-#team {
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-}
-
-#avalDiv, #selcDiv {
-  margin: 4px, 4px;
-  padding: 4px;
-  /* background-color: green; */
-  width: 500px;
-  height: 200px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  text-align: justify;
-  box-shadow: 10px 25px 25px rgba(0, 0, 0, 0.1);
-  border: 1px solid #cfbebe ;
-  border-radius: 6px;
-}
-
-
-#teamNameDiv{
-  display: flex;
-  justify-content: center;
+    font-family: Arial, sans-serif;
+    user-select: none;
+  }
   
-  margin-top: 40px;
-}
-#fName{
-  margin-right: 70px;
-  /* background-color: rgb(0, 0, 0);
-  color: rgb(255, 255, 255); */
+  input[type="text"] {
+    margin-bottom: 10px;
+    padding: 5px;
+  }
   
-}
-#firstName{
-  border-radius: 4px;
-  border: 1px solid #cfbebe ;
-  box-shadow: 3px 3px 0px rgba(57, 54, 54, 0.573);
-  margin-top: 18px;
+  input[type="button"] {
+    margin-top: 10px;
+    padding: 5px 10px;
+  }
   
-}
-#sName{
-  margin-right: 70px;
-  /* background-color: rgb(0, 0, 0);
-  color: rgb(255, 255, 255); */
-}
-#secondName{
-  border-radius: 4px;
-  border: 1px solid #cfbebe ;
-  box-shadow: 3px 3px 0px rgba(57, 54, 54, 0.573);
-  margin-top: 18px;
-}
-
-#toss{
-  margin-left: 710px;
-  cursor: pointer;
-  height: 40px;
-  width: 70px;
-  background-color: rgb(0, 0, 0);
-  color: rgb(255, 255, 255);
-  border-radius: 6px;
-  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.573);
-  border: 1px solid #cfbebe ;
+  /* Flex Container for Player Lists */
+  .available-container {
+    /* display: flex;
+    justify-content: space-between; */
+    margin-left: 500px;
+    cursor: pointer;
+    border-radius: 6px;
+    /* height: 40px;
+    width: 70px; */
+    /* background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255); */
+    /* box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.573);
+    border: 1px solid #cfbebe ; */
+  }
   
-}
-.hit{
-  cursor: pointer;
-  height: 40px;
-  width: 130px;
-  background-color: rgb(0, 0, 0);
-  color: rgb(255, 255, 255);
-  border-radius: 6px;
-  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.573);
-  border: 1px solid #cfbebe ;
+  .available-container > div {
+    width: 45%; /* Adjust width as needed */
+  }
   
-}
-#createTeam{
-  cursor: pointer;
-  height: 40px;
-  width: 90px;
-  background-color: rgb(27, 134, 32);
-  color: rgb(255, 255, 255);
-  border-radius: 30px;
-  box-shadow: 5px 3px 0px rgba(45, 42, 42, 0.573);
-  border: 1px solid #cfbebe ;
-
+  .player-container{
+    display:flex;
+    margin-top: 20px;
+    margin-right: 15px;
+    justify-content: space-evenly;
+    text-align: center;
+  }
+  .CVCdiv{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+  }
+  /* Player Section Styles */
+  .player-section {
+    margin-bottom: 20px;
+  }
   
-}
-#tossWon{
-    color: black;
-    margin-left: 680px;
-}
-
-/* Add visual distinction for Captain and Vice-Captain */
-.captain {
-  background-color: #ffcccc;
-  /* margin-left: 100px; */
-  font-weight: bold;
-}
-
-.vice-captain {
-  background-color: #ccccff;
-  font-weight: bold;
-}
-
-.disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-#teamSelectionHeader {
-  font-weight: bold;
-  color: #f00; /* Red for better visibility */
-}
+  .player-section h4 {
+    margin-bottom: 10px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  li {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  li:hover {
+    background-color: #ddd;
+  }
+  
+  .selected {
+    background-color: #b3e6b3;
+  }
+  
+  
+  /* Textarea Styles */
+  textarea {
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  #team {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+  }
+  
+  #avalDiv, #selcDiv {
+    margin: 4px, 4px;
+    padding: 4px;
+    /* background-color: green; */
+    width: 500px;
+    height: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-align: justify;
+    box-shadow: 10px 25px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid #cfbebe ;
+    border-radius: 6px;
+  }
+  
+  
+  #teamNameDiv{
+    display: flex;
+    justify-content: center;
+    
+    margin-top: 40px;
+  }
+  #fName{
+    margin-right: 70px;
+    /* background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255); */
+    
+  }
+  #firstName{
+    border-radius: 4px;
+    border: 1px solid #cfbebe ;
+    box-shadow: 3px 3px 0px rgba(57, 54, 54, 0.573);
+    margin-top: 18px;
+    
+  }
+  #sName{
+    margin-right: 70px;
+    /* background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255); */
+  }
+  #secondName{
+    border-radius: 4px;
+    border: 1px solid #cfbebe ;
+    box-shadow: 3px 3px 0px rgba(57, 54, 54, 0.573);
+    margin-top: 18px;
+  }
+  
+  #toss{
+    margin-left: 710px;
+    cursor: pointer;
+    height: 40px;
+    width: 70px;
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    border-radius: 6px;
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.573);
+    border: 1px solid #cfbebe ;
+    
+  }
+  .hit{
+    cursor: pointer;
+    height: 40px;
+    width: 130px;
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    border-radius: 6px;
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.573);
+    border: 1px solid #cfbebe ;
+    
+  }
+  #createTeam{
+    cursor: pointer;
+    height: 40px;
+    width: 90px;
+    background-color: rgb(27, 134, 32);
+    color: rgb(255, 255, 255);
+    border-radius: 30px;
+    box-shadow: 5px 3px 0px rgba(45, 42, 42, 0.573);
+    border: 1px solid #cfbebe ;
+  
+    
+  }
+  #tossWon{
+      color: black;
+      margin-left: 680px;
+  }
+  
+  /* Add visual distinction for Captain and Vice-Captain */
+  .captain {
+    background-color: #ffcccc;
+    /* margin-left: 100px; */
+    font-weight: bold;
+  }
+  
+  .vice-captain {
+    background-color: #ccccff;
+    font-weight: bold;
+  }
+  
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  
+  #teamSelectionHeader {
+    font-weight: bold;
+    color: #f00; /* Red for better visibility */
+  }
+  
