@@ -2,9 +2,10 @@
 <html>
 <head>
     <link rel="stylesheet" href="style.css">
-    <title>SAPNA 11</title>
+    <title>Fantasy Cricket</title>
 </head>
 <body>
+    <!-- Toss section -->
     <div id="toss-section">
 
         <div id="teamNameDiv">
@@ -18,10 +19,12 @@
             </div>
         </div>
         
-        <input type="button" id="toss" value="TOSS" onclick="functionToss()"><p/>
+        <input type="button" id="toss" onclick="toss()"><p/>
         
         <div id="tossWon"></div>
     </div>
+
+     <!-- Available Players List -->
     <div id="players-selection">
     <div class="available-container">
         <div>
@@ -61,7 +64,7 @@
                 
             </div>
             <div>
-                <input type="button" id="createTeam" value="Make Team" onclick="createFirstTeam()"><p/>
+                <input type="button" id="createTeam" value="Make Team" onclick="createTeam()"><p/>
             </div>
         </div>
         
@@ -87,7 +90,7 @@
                 </select>
             </div>
             <div>
-                <input type="button" id="createTeam" value="Make Team" onclick="createSecondTeam()"><p/>
+                <input type="button" id="createTeam" value="Make Team" onclick="createTeam()"><p/>
             </div>
         </div>
     </div>
@@ -116,7 +119,8 @@
                 </textarea>
                 
             </div>
-            <button id="hit" class="hit" onclick="hitFunction()">HIT</button>
+            <img id="loading" src="loading.gif" style="display:none; height: 80px; width: 80px; margin-left: 294px;" alt="Loading...">
+            <button id="hit" class="hit" onclick="playBall()">HIT</button>
             <button id="showMatchResult" class="hit" onclick="showMatchResult()">Show Match Result</button>
         </div>
 
